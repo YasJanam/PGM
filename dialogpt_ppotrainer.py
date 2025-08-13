@@ -39,7 +39,6 @@ class ChatbotEnv(Env):
     return self._get_observation()
 
   def step(self,action):
-    #print("call step --> ")
     response = self._decode_action(action)
     self.conversation_history.append(response)
     reward = self._calculate_reward(response)
@@ -51,7 +50,6 @@ class ChatbotEnv(Env):
     return self.tokenizer.decode([action_token_id],skip_special_tokens=True)
 
   def _get_observation(self):
-   # print("call _get_observation --> ")
     if not self.conversation_history:
       return np.zeros(self.observation_space.shape,dtype=np.float32)
     text = " ".join(self.conversation_history)
@@ -99,44 +97,28 @@ class PPOTrainer:
     return dist.log_prob(actions) , dist
 
   def train(self,observations , texts,actions,rewards,old_log_probs):
-    print("call train --> ")
-    #print("obs to tensor : ")
     obs_tensor = torch.tensor(observations,dtype=torch.float32)
-    #print("actions to tensor :")
     actions = torch.tensor(actions)
     actions = actions.to("cuda")
-    #print("tewards to tensor : ")
     rewards = torch.tensor(rewards,dtype=torch.float32)
-    #print("old_log_probs --> stack :")
     old_log_probs = torch.stack(old_log_probs)
 
     # estimate value
-    #print("value_net :")
     values = self.value_net(obs_tensor).squeeze()
-    #print("calculate advantages :")
     advantages = rewards - values.detach()
     advantages = advantages.to("cuda")
 
-    # get new log probs
-    #print("get new log probs :")
-    #print("inputs :")
+    # get new log probs  
     inputs = tokenizer(texts , return_tensors="pt",padding=True,truncation=True).to("cuda")
-    #print("logits :")
     logits = self.policy(**inputs).logits
-    #print("softmax :")
     dists = torch.distributions.Categorical(logits=logits[:,-1,:])
-    #print("get new log probs:")
     new_log_probs = dists.log_prob(actions)
 
     # PPO Loss
-    #print("PPO LOSS :")
     ratios = torch.exp(new_log_probs-old_log_probs)
-    #print(f"ratios : {ratios}")
     ratios = ratios.to("cuda")
     surr1 = ratios*advantages
-    #print(f"surr1 : {surr1}")
     surr2 = torch.clamp(ratios,1-self.clip_eps,1+self.clip_eps)*advantages
-    #print(f"surr2 : {surr2}")
     policy_loss = -torch.min(surr1,surr2).mean()
     print(f"policy_loss : {policy_loss}")
     value_loss = F.mse_loss(values , rewards)
@@ -145,7 +127,6 @@ class PPOTrainer:
     print(f"loss : {loss}")
 
     # update
-    #print("update")
     self.optimizer.zero_grad()
     loss.backward()
     self.optimizer.step()
@@ -191,36 +172,3 @@ for epoch in range(10):
 
 torch.save(policy_model, "DialoGPT_Train_With_PPO1.pth")
 
-"""# دستگرمی"""
-
-pip install torchviz
-
-pip install torchinfo
-
-from torchinfo import summary
-
-summary(policy_model, input_size=(1,128), depth=2)
-
-from torchviz import make_dot
-
-inputs = tokenizer("i have a book", return_tensors="pt").to("cuda")
-outputs = policy_model(**inputs)
-make_dot(outputs.logits, params=dict(policy_model.named_parameters())).render("model_graph", format="png")
-
-for name , module in policy_model.named_modules():
-  print(name , "=>" , module.__class__.__name__)
-
-print(policy_model.config)
-
-import matplotlib.pyplot as plt
-
-for name , param in policy_model.named_parameters():
-  if param.grad is not None:
-    print("------------------------")
-    print(f"parameter : {name} --->   gradient norm : {param.grad.norm().item()}")
-
-for name , param in policy_model.named_parameters():
-  plt.figure()
-  plt.hist(param.detach().cpu().numpy().flatten(), bins=50)
-  plt.title(f"parameter Distribution : {name}")
-  plt.show()
