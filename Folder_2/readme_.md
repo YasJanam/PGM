@@ -1,4 +1,7 @@
 # dialogpt_ppotrainer
+
+پیاده سازی دستی کلاس PPOTrainer برای فاین تیون مدل از پیش آموزش دیده هاگینگ فیس با الگوریتم PPO
+
 ## خلاصه کلی عناصر کد : 
 ### class ChatbotEnv
 
