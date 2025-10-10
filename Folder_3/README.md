@@ -1,6 +1,5 @@
-Welcome to the PPO1 wiki!
 
-# train_with_ppo1 project
+# train_with_ppo
 
 ## اجزای اصلی کد : 
 
