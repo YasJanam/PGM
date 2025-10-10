@@ -1,4 +1,4 @@
-# dialogpt_ppotrainer
+# dialogpt_ppotrainer_1
 
 پیاده سازی دستی کلاس PPOTrainer برای فاین تیون مدل از پیش آموزش دیده هاگینگ فیس با الگوریتم PPO
 
