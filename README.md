@@ -2,6 +2,7 @@
 
 | num | related to | NAME | MODEL | توضیحات |
 | -- | -- | -- | -- | -- |
+| 5 | - | ActorCritic_5 | - | پیاده سازی ورژن آنلاین الگوریتم Actor-critic |
 | 4 | - | ReinforceTrainer_4 | - | ReinforceTrainer پیاده سازی کلاس |
 | 3 | - | REINFORCE_3 | - | reinforce پیاده سازی الگوریتم |
 | 2 | - | train_with_ppo_2 | DialoGPT-small | برای فاین تیون مدل از پیش آموزش دیده ppotrainer پیاده سازی کلاس |
