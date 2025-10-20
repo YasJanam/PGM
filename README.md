@@ -1,4 +1,4 @@
-# PG(Policy-Gradient)
+# PGM (Policy-Gradient Methods)
 
 | num | related to | NAME | MODEL | توضیحات |
 | -- | -- | -- | -- | -- |
