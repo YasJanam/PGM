@@ -1,4 +1,4 @@
-# RL1
+# PG(Policy-Gradient)
 
 | num | related to | NAME | MODEL | توضیحات |
 | -- | -- | -- | -- | -- |
