@@ -11,5 +11,14 @@
 | 0 | - | PPO_INTRODUCTION | - | ppo معرفی الگوریتم |
 
 
-
+#### مفهوم policy-gradient:
+در این الگوریتم ها به جای تخمین تابع ارزش(value) و استنباط سیاست از روی آن ، مستقیما یک تابع سیاست پارامتردار داریم.
+- Policy-Gradient
+   - REINFORCE
+   - Actor-Critic family
+     - A2C / A3C
+     - TRPO / PPO
+     - DDPG / TD3
+     - SAC
+   - Trust-Region
 
